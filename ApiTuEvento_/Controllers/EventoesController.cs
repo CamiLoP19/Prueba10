@@ -9,6 +9,8 @@ using ApiTuEvento_.Models;
 using Microsoft.AspNetCore.Authorization;
 using Humanizer;
 
+using System.IO;
+
 namespace ApiTuEvento_.Controllers
 {
     [Route("api/[controller]")]
@@ -77,40 +79,42 @@ namespace ApiTuEvento_.Controllers
 
         // POST: api/Eventoes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<EventoDTO>> PostEvento(EventoDTO eventodto)
+        [HttpPost("crear")]
+        public async Task<IActionResult> CrearEvento([FromForm] EventoDTO eventoDto)
         {
-            if (eventodto.Imagen != null)
-            {
-               
-                var filePath = Path.Combine("wwwroot/imagenes", eventodto.Imagen.FileName);
+            byte[]? imagenBytes = null;
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+            if (eventoDto.Imagen != null && eventoDto.Imagen.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
                 {
-                    await eventodto.Imagen.CopyToAsync(stream);
+                    await eventoDto.Imagen.CopyToAsync(memoryStream);
+                    imagenBytes = memoryStream.ToArray();
                 }
             }
 
-
-            var evento = new Evento
+            var nuevoEvento = new Evento
             {
-                NombreEvento = eventodto.NombreEvento,
-                FechaEvento = eventodto.FechaEvento,
-                LugarEvento = eventodto.LugarEvento,
-                Aforo = eventodto.Aforo,
-                CategoriaEventoId = eventodto.CategoriaEventoId,
-                DescripcionEvento = eventodto.DescripcionEvento,
-                ImagenUrl = "/imagenes/" + eventodto.Imagen.FileName,
-                EstadoEventoActivo = eventodto.EstadoEventoActivo
+                NombreEvento = eventoDto.NombreEvento,
+                FechaEvento = eventoDto.FechaEvento,
+                LugarEvento = eventoDto.LugarEvento,
+                Aforo = eventoDto.Aforo,
+                CategoriaEventoId = eventoDto.CategoriaEventoId,
+                DescripcionEvento = eventoDto.DescripcionEvento,
+                Imagen = imagenBytes,
+                EstadoEventoActivo = eventoDto.EstadoEventoActivo
             };
-            _context.eventos.Add(evento);
+
+            _context.eventos.Add(nuevoEvento);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEvento", new { id = eventodto.EventoId }, eventodto);
+            return Ok(new { mensaje = "Evento creado correctamente", evento = nuevoEvento });
         }
 
+
+
         // DELETE: api/Eventoes/5
-        
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEvento(int id)
         {

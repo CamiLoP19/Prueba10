@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiTuEvento_.Migrations
 {
     [DbContext(typeof(ContextDB))]
-    [Migration("20250519213916_AgregacionDeRelacionesEntreClases")]
-    partial class AgregacionDeRelacionesEntreClases
+    [Migration("20250525173308_prueba2")]
+    partial class prueba2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -104,10 +104,6 @@ namespace ApiTuEvento_.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCategoriaEvento"));
 
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -141,8 +137,8 @@ namespace ApiTuEvento_.Migrations
                     b.Property<DateTime>("FechaEvento")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ImagenUrl")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("Imagen")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("LugarEvento")
                         .IsRequired()

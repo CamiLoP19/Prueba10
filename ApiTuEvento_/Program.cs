@@ -84,24 +84,39 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v2/swagger.json", "API_Dinamita v2"); // Asegúrate de que coincida con "v2"
-        c.RoutePrefix = "swagger"; // Esto hace que Swagger esté en la raíz (por ejemplo, /swagger)
+        c.SwaggerEndpoint("/swagger/v2/swagger.json", "API_Dinamita v2");
+        c.RoutePrefix = "swagger";
     });
 }
 
-
+app.UseStaticFiles(); // <-- primero archivos estáticos
 app.UseHttpsRedirection();
+
 app.UseCors(permitir => permitir
-    .SetIsOriginAllowed(origin => origin.StartsWith("http://localhost"))
+    .AllowAnyOrigin() // o usa .SetIsOriginAllowed(...) si prefieres restringir
     .AllowAnyHeader()
     .AllowAnyMethod());
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "text/plain";
+        var error = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+        if (error != null)
+        {
+            await context.Response.WriteAsync(error.Error.ToString());
+        }
+    });
+});
 
 app.Run();

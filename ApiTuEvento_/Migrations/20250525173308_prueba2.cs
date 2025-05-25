@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ApiTuEvento_.Migrations
 {
     /// <inheritdoc />
-    public partial class inicial : Migration
+    public partial class prueba2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,8 +31,7 @@ namespace ApiTuEvento_.Migrations
                 {
                     IdCategoriaEvento = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,13 +44,11 @@ namespace ApiTuEvento_.Migrations
                 {
                     PersonaId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Cedula = table.Column<double>(type: "float", nullable: false),
                     Rol = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NombreUsuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Correo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Contraseña = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     CarritoIdCarrito = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -74,20 +71,20 @@ namespace ApiTuEvento_.Migrations
                     FechaEvento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LugarEvento = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Aforo = table.Column<int>(type: "int", nullable: false),
-                    CategoriaEvento = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoriaEventoId = table.Column<int>(type: "int", nullable: false),
                     DescripcionEvento = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImagenUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EstadoEventoActivo = table.Column<bool>(type: "bit", nullable: false),
-                    CategoriaEventoIdCategoriaEvento = table.Column<int>(type: "int", nullable: true)
+                    Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    EstadoEventoActivo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_eventos", x => x.EventoId);
                     table.ForeignKey(
-                        name: "FK_eventos_categoriaEventos_CategoriaEventoIdCategoriaEvento",
-                        column: x => x.CategoriaEventoIdCategoriaEvento,
+                        name: "FK_eventos_categoriaEventos_CategoriaEventoId",
+                        column: x => x.CategoriaEventoId,
                         principalTable: "categoriaEventos",
-                        principalColumn: "IdCategoriaEvento");
+                        principalColumn: "IdCategoriaEvento",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -96,6 +93,7 @@ namespace ApiTuEvento_.Migrations
                 {
                     BoletoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    NombreComprador = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TipoBoleto = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Precio = table.Column<double>(type: "float", nullable: false),
@@ -104,7 +102,6 @@ namespace ApiTuEvento_.Migrations
                     CodigoAN = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EventoId = table.Column<int>(type: "int", nullable: false),
                     PersonaId = table.Column<int>(type: "int", nullable: true),
-                    UsuarioPersonaId = table.Column<int>(type: "int", nullable: true),
                     CarritoIdCarrito = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -122,10 +119,11 @@ namespace ApiTuEvento_.Migrations
                         principalColumn: "EventoId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_boletos_personas_UsuarioPersonaId",
-                        column: x => x.UsuarioPersonaId,
+                        name: "FK_boletos_personas_PersonaId",
+                        column: x => x.PersonaId,
                         principalTable: "personas",
-                        principalColumn: "PersonaId");
+                        principalColumn: "PersonaId",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(
@@ -139,14 +137,14 @@ namespace ApiTuEvento_.Migrations
                 column: "EventoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_boletos_UsuarioPersonaId",
+                name: "IX_boletos_PersonaId",
                 table: "boletos",
-                column: "UsuarioPersonaId");
+                column: "PersonaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_eventos_CategoriaEventoIdCategoriaEvento",
+                name: "IX_eventos_CategoriaEventoId",
                 table: "eventos",
-                column: "CategoriaEventoIdCategoriaEvento");
+                column: "CategoriaEventoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_personas_CarritoIdCarrito",

@@ -134,8 +134,8 @@ namespace ApiTuEvento_.Migrations
                     b.Property<DateTime>("FechaEvento")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ImagenUrl")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("Imagen")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("LugarEvento")
                         .IsRequired()
