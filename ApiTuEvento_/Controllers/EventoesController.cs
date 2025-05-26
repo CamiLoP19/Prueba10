@@ -80,35 +80,28 @@ namespace ApiTuEvento_.Controllers
         // POST: api/Eventoes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("crear")]
-        public async Task<IActionResult> CrearEvento([FromForm] EventoDTO eventoDto)
+        public async Task<IActionResult> CrearEvento([FromBody] EventoDTO eventoDto)
         {
-            byte[]? imagenBytes = null;
+            
 
-            if (eventoDto.Imagen != null && eventoDto.Imagen.Length > 0)
-            {
-                using (var memoryStream = new MemoryStream())
+                var nuevoEvento = new Evento
                 {
-                    await eventoDto.Imagen.CopyToAsync(memoryStream);
-                    imagenBytes = memoryStream.ToArray();
-                }
-            }
+                    NombreEvento = eventoDto.NombreEvento,
+                    FechaEvento = eventoDto.FechaEvento,
+                    LugarEvento = eventoDto.LugarEvento,
+                    Aforo = eventoDto.Aforo,
+                    CategoriaEventoId = eventoDto.CategoriaEventoId,
+                    DescripcionEvento = eventoDto.DescripcionEvento,
+                    EstadoEventoActivo = eventoDto.EstadoEventoActivo
+                };
 
-            var nuevoEvento = new Evento
-            {
-                NombreEvento = eventoDto.NombreEvento,
-                FechaEvento = eventoDto.FechaEvento,
-                LugarEvento = eventoDto.LugarEvento,
-                Aforo = eventoDto.Aforo,
-                CategoriaEventoId = eventoDto.CategoriaEventoId,
-                DescripcionEvento = eventoDto.DescripcionEvento,
-                Imagen = imagenBytes,
-                EstadoEventoActivo = eventoDto.EstadoEventoActivo
-            };
+                _context.eventos.Add(nuevoEvento);
+                await _context.SaveChangesAsync();
+           
+            
+               return Ok(new { evento = nuevoEvento });
 
-            _context.eventos.Add(nuevoEvento);
-            await _context.SaveChangesAsync();
 
-            return Ok(new { mensaje = "Evento creado correctamente", evento = nuevoEvento });
         }
 
 

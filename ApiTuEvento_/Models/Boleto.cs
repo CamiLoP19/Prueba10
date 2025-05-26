@@ -7,12 +7,10 @@ namespace ApiTuEvento_.Models
         [Key] public int BoletoId { get; set; }
         public string NombreComprador { get; set; }
         public TipoBoletoEnum TipoBoleto { get; set; } // Ahora se usa el enum
-        public string Descripcion {  get; set; }
-        public double Precio { get; set; }
+        public string Descripcion { get; set; }
         public bool EstadoVenta {  get; set; } //no vendido, vendido
         public string? CodigoQR { get; set; }
         public string? CodigoAN { get; set; } //codigo alfanumerico irrepetible
-
         public int EventoId { get; set; }
         public Evento evento { get; set; }
         public int? PersonaId { get; set; } // apunta a Usuario.PersonaId
@@ -21,10 +19,10 @@ namespace ApiTuEvento_.Models
 
     public enum TipoBoletoEnum
     {
-        VIP,
-        Preferencial,
-        Comun
-    }
+        vip = 1,
+        preferencial= 2,
+        comun =3
+    }   
 
     public class BoletoDTO
     {
@@ -32,7 +30,6 @@ namespace ApiTuEvento_.Models
         public string NombreComprador { get; set; }
         public TipoBoletoEnum TipoBoleto { get; set; }
         public string Descripcion { get; set; }
-        public double Precio { get; set; }
         public bool EstadoVenta { get; set; }
         public string? CodigoQR { get; set; }
         public string? CodigoAN { get; set; }

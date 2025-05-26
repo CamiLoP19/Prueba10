@@ -12,7 +12,6 @@ namespace ApiTuEvento_.Models
         public int CategoriaEventoId { get; set; }
         public CategoriaEvento CategoriaEvento { get; set; }
         public string DescripcionEvento { get; set; }
-        public byte[]? Imagen { get; set; }
         public bool EstadoEventoActivo { get; set; }
 
         public ICollection<Boleto>? Boletos { get; set; }
@@ -27,7 +26,6 @@ namespace ApiTuEvento_.Models
         public int Aforo { get; set; }
         public int CategoriaEventoId { get; set; }
         public string DescripcionEvento { get; set; }
-        public IFormFile? Imagen { get; set; }
         public bool EstadoEventoActivo { get; set; }
     }
 }

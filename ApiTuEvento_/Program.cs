@@ -92,7 +92,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseStaticFiles(); // <-- primero archivos estáticos
 app.UseHttpsRedirection();
 
 app.UseCors(permitir => permitir
